@@ -11,7 +11,34 @@
         <h2>detail</h2><hr><hr>
         <h3> 제목 : {{posts.title}}</h3>
         <P> 작성일 : {{posts.date}} </p>
+        <p> email : {{posts.email}} </p>
+        <p> url : {{posts.url}} </p>
         <p> 내용 : {{posts.content}} </p>
+        {% if posts.image %}
+            <image src="{{ posts.image.url}}" width="300" height="250" alt="image">
+        {% endif %}
     </div>
+    {% for hashtag in posts.hashtags.all %}
+        <span> {{ hashtag.name }} </span>
+    {% endfor %}
+    <br>
+    <br>
+    <a href="{% url 'edit' posts.id %}">글 수정하기</a>
+    <a href="{% url 'delete' posts.id %}">글 삭제하기</a>
+    <br>
+    <br>
+    <a href="{% url 'likes' posts.id %}">
+        좋아요 : {{posts.like_count}}
+    </a>
+    {% for comment in posts.comments.all %}
+        <p>{{ comment.text }}
+            <a href="{% url 'update_comment' posts.id comment.id %}">수정</a>
+        </p>
+    {%endfor%}
+    <form method="POST" action="{% url 'detail' posts.id %}">
+        {% csrf_token %}
+        <p> {{ form.as_p }} </p>
+        <input type="submit" value="submit">
+    </form>
 </body>
 </html>
